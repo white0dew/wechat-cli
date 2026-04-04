@@ -27,7 +27,9 @@ Chat history · Contacts · Sessions · Favorites · Statistics · Export
 
 ---
 
-## 📥 Installation
+## 📥 Installation (For Humans)
+
+AI Agents — skip ahead to "Installation (For AI Agents)" below.
 
 ### npm (Recommended)
 
@@ -55,6 +57,22 @@ pip install -e .
 
 ---
 
+## 📥 Installation (For AI Agents)
+
+Simply paste the following prompt into Claude Code, OpenClaw, or any AI coding agent:
+
+```bash
+帮我配置并安装：npm install -g @canghe_ai/wechat-cli
+```
+
+For example, in Claude Code:
+
+![install-claude-code-1](image/install-claude-code-1.png)
+
+Note: Make sure you have Node.js installed first. You can ask your agent to set it up if needed.
+
+---
+
 ## 🚀 Quick Start
 
 ### Step 1 — Initialize
@@ -70,6 +88,20 @@ wechat-cli init
 ```
 
 This auto-detects your WeChat data directory, extracts encryption keys, and saves config to `~/.wechat-cli/`.
+
+![init-claude-code-1](image/init-claude-code-1.png)
+
+On macOS, you'll need to run the `sudo` command and enter your password:
+
+![init-claude-code-2](image/init-claude-code-2.png)
+
+If you have multiple WeChat accounts logged in locally, you'll be prompted to choose one. Select the account you're currently using (the default is the first one):
+
+![init-claude-code-3](image/init-claude-code-3.png)
+
+If you're unsure which WeChat account is currently active, navigate to the data folder and sort by modification date to find out:
+
+![init-claude-code-4](image/init-claude-code-4.png)
 
 ### Step 2 — Use It
 
