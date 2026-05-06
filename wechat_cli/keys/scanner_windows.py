@@ -1,8 +1,10 @@
 """Windows 密钥提取 — 扫描 Weixin.exe 进程内存"""
 
+import csv
 import ctypes
 import ctypes.wintypes as wt
 import functools
+import io
 import os
 import re
 import subprocess
@@ -31,14 +33,22 @@ def _get_pids():
     r = subprocess.run(["tasklist", "/FI", "IMAGENAME eq Weixin.exe", "/FO", "CSV", "/NH"],
                        capture_output=True, text=True)
     pids = []
-    for line in r.stdout.strip().split('\n'):
-        if not line.strip():
+
+    # tasklist 的 CSV 列值在不同语言环境下可能出现“暂缺”等非数字文本，
+    # 这里只提取数字，取不到时回退为 0，避免初始化阶段直接崩溃。
+    for row in csv.reader(io.StringIO(r.stdout)):
+        if len(row) < 2:
             continue
-        p = line.strip('"').split('","')
-        if len(p) >= 5:
-            pid = int(p[1])
-            mem = int(p[4].replace(',', '').replace(' K', '').strip() or '0')
-            pids.append((pid, mem))
+        try:
+            pid = int((row[1] or "").strip())
+        except ValueError:
+            continue
+
+        mem_raw = row[4].strip() if len(row) >= 5 and row[4] else ""
+        digits = "".join(ch for ch in mem_raw if ch.isdigit())
+        mem = int(digits) if digits else 0
+        pids.append((pid, mem))
+
     if not pids:
         raise RuntimeError("Weixin.exe 未运行")
     pids.sort(key=lambda x: x[1], reverse=True)
