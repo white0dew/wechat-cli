@@ -20,6 +20,24 @@ _FAV_TYPE_FILTERS = {
 }
 
 
+def _parse_fav_url(content, fav_type):
+    """从 XML content 提取文章 URL。"""
+    if fav_type != 5 or not content:
+        return ''
+    try:
+        root = ET.fromstring(content)
+    except ET.ParseError:
+        return ''
+    item = root if root.tag == 'favitem' else root.find('.//favitem')
+    if item is None:
+        return ''
+
+    return (
+        (item.findtext('.//source/link') or '').strip()
+        or (item.findtext('.//dataitem/stream_weburl') or '').strip()
+    )
+
+
 def _parse_fav_content(content, fav_type):
     """从 XML content 提取摘要信息。"""
     if not content:
@@ -112,12 +130,14 @@ def favorites(ctx, limit, fav_type, query, fmt):
         chat_display = names.get(realchat, realchat) if realchat else ''
 
         summary = _parse_fav_content(content, typ)
+        url = _parse_fav_url(content, typ)
 
         results.append({
             'id': local_id,
             'type': _FAV_TYPE_MAP.get(typ, f'type={typ}'),
             'time': datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M'),
             'summary': summary,
+            'url': url or None,
             'from': from_display,
             'source_chat': chat_display,
         })
@@ -134,6 +154,8 @@ def favorites(ctx, limit, fav_type, query, fmt):
         lines = []
         for r in results:
             entry = f"[{r['time']}] [{r['type']}] {r['summary']}"
+            if r.get('url'):
+                entry += f"\n  链接: {r['url']}"
             if r['from']:
                 entry += f"\n  来自: {r['from']}"
             if r['source_chat']:
