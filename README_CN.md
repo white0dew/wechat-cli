@@ -221,11 +221,18 @@ wechat-cli sessions --format text          # 纯文本输出
 wechat-cli history "张三"                  # 最近 50 条消息
 wechat-cli history "张三" --limit 100 --offset 50
 wechat-cli history "交流群" --start-time "2026-04-01" --end-time "2026-04-03"
+wechat-cli history "交流群" --start-time "2026-04-01 09:00" --end-time "2026-04-01 18:30"
 wechat-cli history "张三" --type link      # 只看链接
 wechat-cli history "张三" --format text
 ```
 
 **选项：** `--limit`、`--offset`、`--start-time`、`--end-time`、`--type`、`--format`
+
+`--start-time` 和 `--end-time` 支持以下格式：
+
+- `YYYY-MM-DD`
+- `YYYY-MM-DD HH:MM`
+- `YYYY-MM-DD HH:MM:SS`
 
 ### `search` — 搜索消息
 

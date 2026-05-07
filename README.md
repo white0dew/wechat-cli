@@ -223,11 +223,18 @@ wechat-cli sessions --format text          # Human-readable
 wechat-cli history "Alice"                 # Last 50 messages
 wechat-cli history "Alice" --limit 100 --offset 50
 wechat-cli history "Team" --start-time "2026-04-01" --end-time "2026-04-03"
+wechat-cli history "Team" --start-time "2026-04-01 09:00" --end-time "2026-04-01 18:30"
 wechat-cli history "Alice" --type link     # Only links
 wechat-cli history "Alice" --format text
 ```
 
 **Options:** `--limit`, `--offset`, `--start-time`, `--end-time`, `--type`, `--format`
+
+`--start-time` and `--end-time` accept:
+
+- `YYYY-MM-DD`
+- `YYYY-MM-DD HH:MM`
+- `YYYY-MM-DD HH:MM:SS`
 
 ### `search` — Search Messages
 
